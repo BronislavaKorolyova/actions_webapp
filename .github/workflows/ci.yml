@@ -21,12 +21,12 @@ jobs:
       - name: Bump Version
         id: bump
         uses: nnichols/maven-version-bump-action@v3
+        with:
+           username: ${{ secrets.DOCKERHUB_USERNAME }}
+           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Print Version
         run: "echo 'New Version: ${{steps.bump.outputs.version}}'"
-         with:
-           username: ${{ secrets.DOCKERHUB_USERNAME }}
-           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build with Maven
         run: mvn clean package
