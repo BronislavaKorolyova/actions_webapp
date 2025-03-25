@@ -4,6 +4,11 @@ WORKDIR /app
 COPY . .
 RUN mvn clean package
 
+# === Set version inside container ===
+ARG VERSION
+RUN mvn versions:set -DnewVersion=$VERSION && \
+    mvn versions:commit
+
 # === Stage 1: Clean and Test ===
 FROM base AS test
 RUN mvn clean test
