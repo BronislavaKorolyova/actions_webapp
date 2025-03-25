@@ -31,9 +31,6 @@ jobs:
           mvn versions:set -DnewVersion=$NEW_VERSION
           mvn versions:commit
 
-      - name: Show built JAR file
-        run: ls target/*.jar
-
       - name: Build with Maven
         run: mvn clean package
 
