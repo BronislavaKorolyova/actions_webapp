@@ -24,8 +24,8 @@ jobs:
 
       - name: Print Version
         run: "echo 'New Version: ${{steps.bump.outputs.version}}'"
-		with:
-			github-token: ${{ secrets.DOCKERHUB_TOKEN }}
+        with:
+          github-token: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build with Maven
         run: mvn clean package
