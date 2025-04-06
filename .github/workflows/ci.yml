@@ -39,6 +39,11 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
         
+      - name: Debug workspace structure
+        run: |
+          pwd
+          ls -R
+        
       - name: Install OWASP Dependency-Check CLI
         run: |
           curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.9/dependency-check-9.0.9-release.zip -o dc.zip
@@ -47,9 +52,10 @@ jobs:
 
       - name: Run Dependency-Check
         run: |
-          dependency-check/dependency-check/bin/dependency-check.sh \
+          cd simple-java-maven-app
+          ../dependency-check/dependency-check/bin/dependency-check.sh \
             --project 'Simple Java Maven App' \
-            --scan ./simple-java-maven-app \
+            --scan . \
             --format ALL \
-            --out dependency-check-report \
+            --out ../dependency-check-report \
             --failOnCVSS 9.0
