@@ -17,6 +17,7 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          
       - name: Export JAVA_HOME
         run: echo "JAVA_HOME=$JAVA_HOME" >> $GITHUB_ENV          
         
@@ -25,7 +26,6 @@ jobs:
         
       - name: Run SpotBugs
         run: mvn com.github.spotbugs:spotbugs-maven-plugin:spotbugs
-
      
       - name: Run Secret Scan
         uses: pre-commit/action@v3.0.0
@@ -42,6 +42,16 @@ jobs:
 
       - name: Set VERSION env 
         run: echo "VERSION=${{ steps.bump.outputs.version }}" >> $GITHUB_ENV 
+
+      - name: Build Docker image
+        run: docker build -t ghcr.io/${{ github.repository }}:${{ env.VERSION }} .
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Push image to GHCR
+        run: docker push ghcr.io/${{ github.repository }}:${{ env.VERSION }}
+
 
       - name: Run Trivy Dependency Scan
         uses: aquasecurity/trivy-action@master
@@ -61,9 +71,8 @@ jobs:
       - name: Install Cosign
         uses: sigstore/cosign-installer@v3.5.0
 
-      - name: Sign Docker image with Cosign
+      - name: Sign the image using OIDC (no keys needed)
         env:
           COSIGN_EXPERIMENTAL: 'true'
         run: |
-          cosign sign --yes \
-            ${{ secrets.DOCKERHUB_USERNAME }}/simple-java-maven-app:${{ env.VERSION }}
+          cosign sign --yes ghcr.io/${{ github.repository }}:${{ env.VERSION }}
