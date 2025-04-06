@@ -49,7 +49,7 @@ jobs:
         run: |
           dependency-check/dependency-check/bin/dependency-check.sh \
             --project 'Simple Java Maven App' \
-            --scan simple-java-maven-app \
+            --scan ./simple-java-maven-app \
             --format ALL \
             --out dependency-check-report \
             --failOnCVSS 9.0
