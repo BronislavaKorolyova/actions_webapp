@@ -47,6 +47,6 @@ jobs:
           project: 'Simple Java Maven App'
           path: 'simple-java-maven-app'
           format: 'ALL'
-          failOnCVSS: 9.0
-          outputDirectory: 'dependency-check-report'
-
+          out: 'dependency-check-report'
+          args: >
+            --failOnCVSS 9.0
