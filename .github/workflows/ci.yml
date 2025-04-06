@@ -77,4 +77,6 @@ jobs:
       - name: Sign the image using OIDC (no keys needed)
         env:
           COSIGN_EXPERIMENTAL: 'true'
-        run: cosign sign --yes $IMAGE_NAME          
+        run: |
+          echo "Signing image: $IMAGE_NAME"
+          cosign sign --yes --oidc-issuer https://token.actions.githubusercontent.com $IMAGE_NAME          
