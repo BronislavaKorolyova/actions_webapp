@@ -20,6 +20,14 @@ RUN mvn clean package
 # === Runtime Stage ===
 FROM eclipse-temurin:17-jdk-alpine AS runtime
 WORKDIR /app
+
+# Create a non-root user and use it
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+USER appuser
+
 COPY --from=build /app/target/*.jar app.jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
+# Add health check (adjust the port if needed)
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+  CMD wget -q --spider http://localhost:8080/ || exit 1
