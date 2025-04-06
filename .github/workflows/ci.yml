@@ -39,14 +39,17 @@ jobs:
       - name: Build with Maven
         run: mvn clean package
         
-      - name: Dependency Check (OWASP)
-        uses: dependency-check/Dependency-Check_Action@main
-        env:
-          JAVA_HOME: ${{ env.JAVA_HOME }}
-        with:
-          project: 'Simple Java Maven App'
-          path: 'simple-java-maven-app'
-          format: 'ALL'
-          out: 'dependency-check-report'
-          args: >
+      - name: Install OWASP Dependency-Check CLI
+        run: |
+          curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.9/dependency-check-9.0.9-release.zip -o dc.zip
+          unzip dc.zip -d dependency-check
+          chmod +x dependency-check/bin/dependency-check.sh
+
+      - name: Run Dependency-Check
+        run: |
+          dependency-check/bin/dependency-check.sh \
+            --project 'Simple Java Maven App' \
+            --scan simple-java-maven-app \
+            --format ALL \
+            --out dependency-check-report \
             --failOnCVSS 9.0
