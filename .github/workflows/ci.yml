@@ -17,6 +17,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+      
+      - name: Run Secret Scan
+        uses: pre-commit/action@v3.0.0
 
       - name: Bump Version
         id: bump
