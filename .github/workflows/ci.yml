@@ -52,6 +52,7 @@ jobs:
 
       - name: Run Dependency-Check
         run: |
+          mkdir -p dependency-check-report
           dependency-check/dependency-check/bin/dependency-check.sh \
             --project 'Simple Java Maven App' \
             --scan . \
