@@ -47,5 +47,5 @@ jobs:
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "config"
-          scan-ref: "./dockerfile"
+          scan-ref: "./Dockerfile"
           exit-code: "1"
