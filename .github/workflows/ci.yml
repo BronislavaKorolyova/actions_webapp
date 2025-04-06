@@ -36,8 +36,16 @@ jobs:
       - name: Set VERSION env 
         run: echo "VERSION=${{ steps.bump.outputs.version }}" >> $GITHUB_ENV 
 
-      - name: Install auditjs
-        run: npm install -g auditjs
-        
-      - name: Run OSSIndex scan with auditjs
-        run: auditjs ossi --whitelist-unknown
+      - name: Run Trivy Dependency Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          ignore-unfixed: true
+          severity: "CRITICAL"
+          exit-code: "1"
+      - name: Scan Dockerfile with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "config"
+          scan-ref: "./dockerfile"
+          exit-code: "1"
