@@ -52,10 +52,9 @@ jobs:
 
       - name: Run Dependency-Check
         run: |
-          cd simple-java-maven-app
-          ../dependency-check/dependency-check/bin/dependency-check.sh \
+          dependency-check/dependency-check/bin/dependency-check.sh \
             --project 'Simple Java Maven App' \
             --scan . \
             --format ALL \
-            --out ../dependency-check-report \
+            --out dependency-check-report \
             --failOnCVSS 9.0
