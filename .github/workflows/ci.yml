@@ -49,3 +49,22 @@ jobs:
         run: |
           docker push bronyakorolyova/simple-java-maven-app:${{ env.VERSION }}
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install SSH key
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
+
+      - name: Deploy to EC2
+        run: |
+          ssh -o StrictHostKeyChecking=no ec2-user@${{ secrets.EC2_HOST }} << EOF
+            docker pull bronyakorolyova/simple-java-maven-app:${{ env.VERSION }}
+            docker stop app || true && docker rm app || true
+            docker run -d --name app -p 80:8080 bronyakorolyova/simple-java-maven-app:${{ env.VERSION }}
+          EOF
+
+
