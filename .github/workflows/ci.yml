@@ -36,26 +36,8 @@ jobs:
       - name: Set VERSION env 
         run: echo "VERSION=${{ steps.bump.outputs.version }}" >> $GITHUB_ENV 
 
-      - name: Build with Maven
-        run: mvn clean package
+      - name: Install auditjs
+        run: npm install -g auditjs
         
-      - name: Debug workspace structure
-        run: |
-          pwd
-          ls -R
-        
-      - name: Install OWASP Dependency-Check CLI
-        run: |
-          curl -L https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.9/dependency-check-9.0.9-release.zip -o dc.zip
-          unzip dc.zip -d dependency-check
-          chmod +x dependency-check/dependency-check/bin/dependency-check.sh
-
-      - name: Run Dependency-Check
-        run: |
-          mkdir -p dependency-check-report
-          dependency-check/dependency-check/bin/dependency-check.sh \
-            --project 'Simple Java Maven App' \
-            --scan . \
-            --format ALL \
-            --out dependency-check-report \
-            --failOnCVSS 9.0
+      - name: Run OSSIndex scan with auditjs
+        run: auditjs ossi --whitelist-unknown
