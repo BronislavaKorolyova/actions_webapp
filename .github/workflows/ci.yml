@@ -50,9 +50,20 @@ jobs:
           ignore-unfixed: true
           severity: "CRITICAL"
           exit-code: "1"
+
       - name: Scan Dockerfile with Trivy
         uses: aquasecurity/trivy-action@master
         with:
           scan-type: "config"
           scan-ref: "./Dockerfile"
           exit-code: "1"
+      
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.5.0
+
+      - name: Sign Docker image with Cosign
+        env:
+          COSIGN_EXPERIMENTAL: 'true'
+        run: |
+          cosign sign --yes \
+            ${{ secrets.DOCKERHUB_USERNAME }}/simple-java-maven-app:${{ env.VERSION }}
